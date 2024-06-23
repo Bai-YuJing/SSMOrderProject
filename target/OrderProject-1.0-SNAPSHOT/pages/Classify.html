@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分类管理</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+
+</head>
+<body>
+<div class="layui-btn-container">
+    <button class="layui-btn layui-btn layui-bg-black " id="add" lay-active="add">
+        <i class="layui-icon layui-icon-add-1"></i> 添加分类
+    </button>
+    <p style="float: right">搜索</p>
+
+
+</div>
+<table class="layui-hide" id="table">
+    <script id="actions" type="text/html">
+        <div class="layui-btn-container">
+            <button lay-active="addMenu" class="layui-btn layui-btn-xs layui-btn-radius" id="addMenu" data-id={{=d.id}}>
+                <i class="layui-icon layui-icon-add-circle"></i> 添加菜品
+            </button>
+            <button lay-active="update" class="layui-btn layui-btn-xs layui-btn-radius layui-bg-blue" id="update"
+                    data-id={{=d.id}}>
+                <i class="layui-icon layui-icon-edit"></i> 修改
+
+            </button>
+            <button lay-active="delete" class="layui-btn layui-btn-xs layui-btn-radius layui-bg-red" id="delete"
+                    data-id={{=d.id}}>
+                <i class="layui-icon layui-icon-delete"></i> 删除
+            </button>
+
+        </div>
+    </script>
+</table>
+<script>
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    let form = layui.form;
+    var uid = null
+    var s = false
+    $.ajax({
+        url: '../business/findBusiness',
+        dataType: 'json',
+        type: 'post',
+        success: function (data) {
+            uid = data.id;
+            layui.use(function () {
+                let table = layui.table;
+                table.render({
+                    elem: "#table",
+                    url: "../business/classify?id=" + data.id,
+                    method: "get",
+                    cols: [[
+                        {field: 'id', title: 'ID', width: 100, align: 'center', fixed: true},
+                        {field: 'name', title: '分类名称', width: 150, align: 'center', fixed: true},
+                        {field: 'menuCount', title: '分类菜品数', width: 150, align: 'center'},
+                        {field: 'addtime', title: '添加时间', minwidth: 270, align: 'center'},
+                        {title: '操作', width: 400, align: 'center', templet: '#actions'}
+                    ]],
+                    page: true,
+                });
+            });
+        }
+    });
+    layui.use('util', function () {
+        let util = layui.util;
+        util.event('lay-active', {
+            // 重命名
+            update: function (d) {
+                let id = d.context.dataset.id;
+                layer.prompt({title: "请输入新的分类名称", formType: 0}, function (name, index) {
+                    layer.close(index);
+                    $.ajax({
+                        url: "../business/updateName",
+                        data: {name: name, id: id, table: "t_classify"},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            console.log(msg)
+                            if (msg === "success") {
+                                layer.alert("修改成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('修改失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("修改失败")
+                        }
+                    });
+                })
+            },
+            // 删除
+            delete: function (d) {
+                let id = d.context.dataset.id;
+                layer.confirm("确认删除？", {icon: 3, title: '提示'}, function () {
+                    $.ajax({
+                        url: "../business/delete",
+                        data: {id: id, table: "t_classify"},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("删除成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("删除失败")
+                        }
+                    });
+                })
+            },
+            // 添加分类
+            add: function (d) {
+                // let id = d.context.dataset.id;
+                layer.prompt({title: "请输入添加的分类名称", formType: 0}, function (name, index) {
+                    layer.close(index);
+                    $.ajax({
+                        url: "../business/addClassify",
+                        data: {name: name, id: uid},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("添加成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('添加失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("添加失败")
+                        }
+                    });
+                })
+            },
+            //  添加菜品
+            addMenu: function (d) {
+                id = d.context.dataset.id;
+                console.log(id)
+                layer.open({
+                    type: 2,
+                    area: ['360px', '440px'],
+                    title: "添加菜品",
+                    // data:{"classifyId":id},
+                    content: "../business/addMenu?classifyId=" + id
+
+                });
+            },
+        })
+    });
+</script>
+
+
+</body>
+</html>

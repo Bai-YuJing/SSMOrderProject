@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+    <script src="../pages/vue/vue.min.js"></script>
+    <style>
+        .fix-table {
+            table-layout: fixed;
+        }
+
+        .fix-table td {
+            white-space: nowrap; /* 自适应宽度*/
+            overflow: hidden;
+            text-overflow: ellipsis; /*省略号显示*/
+        }
+
+    </style>
+</head>
+
+<body>
+
+<table class="layui-table" id="table">
+    <colgroup>
+        <col width="150">
+        <col width="150">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>订单编号</th>
+        <th style="width: 150px">下单时间</th>
+        <th style="width: 400px">用户地址</th>
+        <th style="width: 400px">商家地址</th>
+        <th style="width: 50px">状态</th>
+        <th style="width: 50px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="item in list">
+        <td>{{item.id}}</td>
+        <td>{{item.orderTime}}</td>
+        <td>{{item.userAddress}}</td>
+        <td>{{item.businessAddress}}</td>
+        <td class="layui-font-green" v-if="item.state===1">已下单</td>
+        <td class="layui-font-blue" v-if="item.state===2">已出餐</td>
+        <td style="color: orange" v-if="item.state===3">已取货</td>
+        <td style="color: green" v-if="item.state===4">已送达</td>
+        <td v-if="item.state===1">
+            <button class="layui-btn layui-btn-disabled">取餐</button>
+        </td>
+        <td v-if="item.state===4">
+            <button class="layui-btn layui-btn-disabled">已送达</button>
+        </td>
+        <td v-if="item.state===2">
+            <button @click="riderMyOrder(item.id,3)" class="layui-btn layui-bg-orange">取餐</button>
+        </td>
+        <td v-if="item.state===3">
+            <button @click="riderMyOrder(item.id,4)" class="layui-btn layui-bg-red">送达</button>
+        </td>
+
+
+    </tr>
+
+    </tbody>
+</table>
+<div id="demo-laypage-pn-show"></div>
+</body>
+<script>
+    let vue = new Vue({
+        el: "#table",
+        data: {
+            list: []
+        },
+        methods: {
+            riderMyOrder(id, state) {
+                layer.confirm('确认接单？', {icon: 3}, function () {
+                    $.ajax({
+                        url: "../rider/riderMyOrder",
+                        data: {id: id, state: state},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('操作失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    })
+                });
+            }
+        }
+    });
+    // layui引入需要的组件
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    let form = layui.form;
+    $.ajax({
+        url: "../rider/getMyOrdersCount",
+        success: function (count) {
+            layui.use(function () {
+                var laypage = layui.laypage;
+                var layer = layui.layer;
+                // 只显示上一页、下一页、当前页
+                laypage.render({
+                    elem: 'demo-laypage-pn-show',
+                    count: count,
+                    groups: 1,
+                    limit: 8,
+                    first: false,
+                    last: false,
+                    layout: ['prev', 'page', 'next'],
+                    jump: function (obj, first) {
+                        $.ajax({
+                            url: "../rider/getMyOrders",
+                            data: {page: obj.curr},
+                            success: function (list) {
+                                // console.log(JSON.parse( list ))
+                                // 将查到的数据放进vue容器
+                                // JSON.parse( list ) 将json转成对象
+                                vue.list = JSON.parse(list);
+
+                            }
+                        })
+                        // 首次不执行
+                        if (!first) {
+                            layer.msg('第 ' + obj.curr + ' 页');
+                        }
+                    }
+                });
+            });
+        }
+    })
+</script>
+</html>

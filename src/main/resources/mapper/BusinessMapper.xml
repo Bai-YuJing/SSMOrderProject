@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.example.order.Dao.BusinessMapper">
+
+    <insert id="register" parameterType="business">
+        insert into t_business
+        (store_name,account,password,address,full_address)
+        values
+        (#{storeName},#{account},PASSWORD(#{password}),#{address},#{fullAddress})
+    </insert>
+    <select id="login" resultType="business">
+        select id,store_name storeName,account,pic,password, address addressId,full_address fullAddress,state
+        from
+        t_business
+        where account=#{account} and password=PASSWORD(#{password})
+    </select>
+
+    <select id="findClassify" resultType="Classify">
+        select id,name,business_id businessId,addtime
+        from t_classify
+        where
+        business_id=#{id}
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="findClassifyCount" resultType="int">
+        select count(*)
+        from t_menu
+        where
+        classify_id=#{id}
+    </select>
+    <select id="findAllClassifyCount" resultType="int">
+        select count(*)
+        from t_classify
+        where
+        business_id=#{id}
+    </select>
+    <update id="updateClassify" parameterType="int">
+        update ${table}
+        set name=#{name}
+        where
+        id=#{id}
+    </update>
+    <insert id="addClassify" parameterType="Map">
+        insert into t_classify
+        (name,business_id)
+        values
+        (#{name},#{id})
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from ${table} where id=#{id}
+    </delete>
+    <insert id="addMenu" parameterType="menu">
+        insert into t_menu
+        (name,price,pic,classify_id,business_id)
+        values
+        (#{name},#{price},#{pic},#{classifyId},#{businessId})
+    </insert>
+    <select id="findMenu" resultType="Menu">
+        select id,name,price, pic,classify_id classifyId,business_id classifyId,state,addtime
+        from t_menu
+        where
+        business_id=#{id}
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="findMenuCount" resultType="int">
+        select count(*)
+        from t_menu
+        where
+        business_id=#{id}
+    </select>
+    <select id="findClassifyName" resultType="string">
+        select name
+        from t_classify
+        where
+        id=#{id}
+    </select>
+    <!--    啊？
+            state="${state}"为什么这样写才能运行啊啊啊啊啊啊啊啊啊啊啊啊啊-->
+    <update id="updateMenuState" parameterType="int">
+        update t_menu
+        SET state="${state}"
+        WHERE id=${id}
+    </update>
+    <delete id="deleteMenu" parameterType="int">
+        delete from t_menu
+        where id=#{id}
+    </delete>
+    <update id="updatePic" parameterType="int">
+        update t_menu
+        SET pic="${name}"
+        WHERE id=#{id}
+    </update>
+    <update id="updateValue" parameterType="int">
+        update t_menu
+        SET name="${name}",price=#{price}
+        WHERE id=#{id}
+    </update>
+    <select id="findUpdateValue" resultType="Menu">
+        select name ,price
+        from t_menu
+        where id=#{id}
+    </select>
+    <update id="updateBusinessMassageStoreName" parameterType="int">
+        update t_business
+        set store_name='${msg}'
+        where id=#{id}
+    </update>
+    <update id="updateBusinessMassageAddressId" parameterType="int">
+        update t_business
+        set address='${msg}'
+        where id=#{id}
+    </update>
+    <update id="upFullAddress" parameterType="int">
+        update t_business
+        set full_address='${fullAddress}'
+        where id=#{id}
+    </update>
+    <update id="upBState" parameterType="int">
+        update t_business
+        set state='${fullAddress}'
+        where id=#{id}
+    </update>
+    <update id="upBPic" parameterType="int">
+        update t_business
+        SET pic="${name}"
+        WHERE id=#{id}
+    </update>
+    <select id="findOrders" resultType="orders">
+        select id,price,order_time orderTime,user_id userId,state
+        from
+        t_orders
+        where
+        business_id=#{id}
+        order by state asc
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="findOrdersCount" resultType="int">
+        select count(*)
+        from
+        t_orders
+        where
+        business_id=#{id}
+    </select>
+    <update id="upStateBusinesses" parameterType="int">
+        update t_orders
+        set state=2
+        where id=${id}
+    </update>
+    <select id="selectOrders" resultType="orders">
+        select id,price,order_time orderTime,user_id userId,state
+        from
+        t_orders
+        where
+        business_id=#{id} and state=#{state}
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="selectOrdersCount" resultType="int">
+        select count(*)
+        from
+        t_orders
+        where
+        business_id=#{id} and state=#{state}
+    </select>
+    <select id="selectMenuList" resultType="BusinessMenu">
+        select menu_id menuId,num
+        from
+        t_full_orders
+        where
+        order_id=#{id}
+    </select>
+    <select id="selectMenuName" resultType="string">
+        select name
+        from
+        t_menu
+        where
+        id=#{id}
+    </select>
+    <select id="selectMenuListCount" resultType="int">
+        select count(*)
+        from
+        t_full_orders
+        where
+        order_id=#{id}
+    </select>
+    <select id="selectClsid" resultType="int">
+        select classify_id
+        from
+        t_menu
+        where
+        id=#{id}
+    </select>
+    <select id="selectClsName" resultType="string">
+        select name
+        from
+        t_classify
+        where
+        id=#{id}
+    </select>
+</mapper>

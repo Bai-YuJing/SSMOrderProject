@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+    <display-name>Archetype Created Web Application</display-name>
+
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 实例化Servlet -->
+    <servlet>
+        <servlet-name>order</servlet-name>
+        <!-- 核心类，前端控制器 -->
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--
+          配置文件的路径，
+          默认值：/web/WEB-INF/[servlet-name]-servlet.xml
+        -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring.xml</param-value>
+        </init-param>
+        <!-- servlet的优先级，越小优先级越大，优先级越大启动越早，1：tomcat启动的时候实例化DispatcherServlet -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- 把url地址映射到servlet对象 -->
+    <servlet-mapping>
+        <servlet-name>order</servlet-name>
+        <!-- 所有的请求 -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+</web-app>

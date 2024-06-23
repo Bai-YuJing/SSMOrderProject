@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+</head>
+<body>
+<form action="../business/updateValue" method="post">
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-user"></i>
+                </div>
+                <input class="layui-input" id="name" name="name" placeholder="" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-user"></i>
+                    </div>
+                    <input class="layui-input" id="price" name="price" placeholder="" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn-fluid" id="button" lay-filter="demo-login" lay-submit
+                type="submit">提交
+        </button>
+    </div>
+</form>
+<script>
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    $.ajax({
+        url: "../business/findUpdateValue",
+        success(msg) {
+            msg = JSON.parse(msg)
+            document.getElementById("name").value = msg.name;
+            document.getElementById("price").value = msg.price;
+        }
+    })
+</script>
+</body>
+</html>

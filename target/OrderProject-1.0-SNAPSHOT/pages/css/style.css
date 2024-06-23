@@ -1,0 +1,24 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.reg {
+    width: 600px;
+    height: auto;
+    margin: auto;
+    padding-top: 10%;
+}
+
+.reg-title {
+    text-align: center;
+}
+
+.reg-btn {
+    padding: auto;
+}
+
+.address {
+    width: 120px;
+}
+

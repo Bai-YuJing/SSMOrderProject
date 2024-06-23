@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+    <script src="../pages/vue/vue.min.js"></script>
+</head>
+<body>
+<table class="layui-table " id="mTable" lay-even lay-filter="test" lay-filter="test" style="text-align: center;">
+    <tr>
+        <th style="width: 15px;text-align: center;">id</th>
+        <th style="width: 50px;text-align: center;">菜名</th>
+        <th style="width: 30px;text-align: center;">价格</th>
+        <th style="width:50px; height:50px;text-align: center;">图片</th>
+        <th style="width: 60px;text-align: center;">分类</th>
+        <th style="width: 30px;text-align: center;">状态</th>
+        <th style="width: 80px;text-align: center;">添加时间</th>
+        <th style="width: 260px;text-align: center;">操作</th>
+    </tr>
+    <tr v-for="item in mList">
+        <td>{{item.id}}</td>
+        <td>{{item.name}}</td>
+        <td>￥{{item.price}}</td>
+        <td><img alt="" height="50px" v-bind:src="item.pic" width="50px"></td>
+        <td>{{item.classifyName}}</td>
+        <td style="color: green" v-if="item.state==='正常'">{{item.state}}</td>
+        <td style="color: red" v-if="item.state==='下架'">{{item.state}}</td>
+        <td>{{item.addtime}}</td>
+        <td>
+            <button @click="updateValue(item.id)" class="layui-btn  layui-btn-radius" id="update">
+                <i class="layui-icon layui-icon-add-circle"></i> 编辑
+            </button>
+            <button @click="updateSN(item.id,'N')" class="layui-btn  layui-bg-gray layui-btn-radius"
+                    v-if="item.state==='正常'">
+                <i class="layui-icon layui-icon-subtraction"></i> 下架
+            </button>
+            <button @click="updateSN(item.id,'Y')" class="layui-btn  layui-bg-orange layui-btn-radius"
+                    v-if="item.state==='下架'">
+                <i class="layui-icon layui-icon-addition"></i> 上架
+            </button>
+            <button @click="updatePic(item.id)" class="layui-btn  layui-bg-blue layui-btn-radius">
+                <i class="layui-icon layui-icon-picture"></i> 更改图片
+            </button>
+            <button @click="deleteMenu (item.id)" class="layui-btn  layui-bg-red layui-btn-radius">
+                <i class="layui-icon layui-icon-delete"></i> 删除
+            </button>
+        </td>
+    </tr>
+</table>
+<div id="demo-laypage-pn-show"></div>
+<script>
+    let upload = layui.upload;
+    let layer = layui.layer;
+    let element = layui.element;
+    let $ = layui.$;
+    let form = layui.form;
+    let uid = null;
+    var vue = new Vue({
+        el: "#mTable",
+        data: {
+            mList: null
+        },
+        methods: {
+            // 删除
+            deleteMenu(id) {
+                layer.confirm('确认删除？', {icon: 3}, function () {
+                    $.ajax({
+                        url: "../business/deleteMenu",
+                        data: {id: id},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("删除成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg('删除失败');
+                        }
+                    })
+                });
+            },
+            // 下架/上架
+            updateSN(id, state) {
+                layer.confirm('确认更改？', {icon: 3}, function () {
+                    $.ajax({
+                        url: "../business/updateState",
+                        data: {id: id, state: state},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === ("success")) {
+                                layer.alert("修改成功", function () {
+                                    location.reload();
+                                })
+                            }
+                        },
+                        error: function () {
+                            layer.msg('修改失败');
+                        }
+                    })
+                });
+            },
+            // 修改图片
+            updatePic(id) {
+                layer.open({
+                    type: 2,
+                    title: "修改图片",
+                    shadeClose: true,
+                    area: ['200px', "270px"],
+                    scrollbar: false,
+                    content: "../business/updatePic?id=" + id,
+                })
+            },
+            // 修改价格、名称
+            updateValue(id) {
+                layer.open({
+                    type: 2,
+                    title: "修改菜品",
+                    shadeClose: true,
+
+                    content: "../business/updateValue?id=" + id,
+                })
+            }
+
+        }
+    });
+    // 获取id
+    $.ajax({
+        url: '../business/findBusiness',
+        dataType: 'json',
+        type: 'post',
+        success: function (data) {
+            uid = data.id;
+            $.ajax({
+                url: "../business/findMenuCount",
+                success: function (count) {
+                    layui.use(function () {
+                        var laypage = layui.laypage;
+                        var layer = layui.layer;
+                        // 只显示上一页、下一页、当前页
+                        laypage.render({
+                            elem: 'demo-laypage-pn-show',
+                            count: count,
+                            groups: 1,
+                            limit: 5,
+                            first: false,
+                            last: false,
+                            layout: ['prev', 'page', 'next'],
+                            jump: function (obj, first) {
+                                $.ajax({
+                                    url: "../business/findMenu",
+                                    data: {id: uid, page: obj.curr},
+                                    success: function (list) {
+                                        // console.log(JSON.parse( list ))
+                                        // 将查到的数据放进vue容器
+                                        // JSON.parse( list ) 将json转成对象
+                                        vue.mList = JSON.parse(list);
+
+                                    }
+                                })
+                                // 首次不执行
+                                if (!first) {
+                                    layer.msg('第 ' + obj.curr + ' 页');
+                                }
+                            }
+                        });
+                    });
+                }
+            })
+        }
+    })
+
+</script>
+</body>
+</html>

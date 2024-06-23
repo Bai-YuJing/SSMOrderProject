@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.example.order.Dao.AdminMapper">
+
+
+    <select id="login" resultType="admin">
+        select id,name,account,password
+        from
+        t_admin
+        where account=#{account} and password=PASSWORD(#{password})
+    </select>
+    <select id="findCountUser" resultType="int">
+        select count(*) from t_user
+    </select>
+    <select id="findUser" resultType="User">
+        select id,username,account,state,birthday,state
+        from t_user
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="findCountBusiness" resultType="int">
+        select count(*) from t_business
+    </select>
+    <select id="findBusiness" resultType="Business">
+        select id,store_name storeName,account,state,address addressId,full_address fullAddress,state
+        from t_business
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <delete id="delete" parameterType="int">
+        delete from ${table} where id=#{id}
+    </delete>
+    <update id="state" parameterType="int">
+        UPDATE ${table}
+        SET state=#{state}
+        WHERE id=#{id}
+    </update>
+    <select id="getState" resultType="string">
+        select state
+        from
+        ${table}
+        where id=#{id}
+    </select>
+    <select id="getProvince" resultType="Address">
+        select id,pid,name
+        from
+        t_district
+        where id=#{id}
+    </select>
+    <select id="getCity" resultType="Address">
+        select id,pid,name
+        from
+        t_district
+        where id=#{id}
+    </select>
+    <select id="getDistrict" resultType="Address">
+        select id,pid,name
+        from
+        t_district
+        where id=#{id}
+    </select>
+
+    <select id="findCountRider" resultType="int">
+        select count(*) from t_rider
+    </select>
+    <select id="findRider" resultType="Rider">
+        select id,name,phone,account,state
+        from t_rider
+        limit ${(page-1)*rows},${rows}
+    </select>
+</mapper>

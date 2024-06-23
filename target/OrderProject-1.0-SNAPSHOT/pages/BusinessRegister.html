@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>商家注册</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <link href="../pages/css/style.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+    <script>
+        // 验证密码
+        function verification() {
+            var pw1 = document.getElementById("confirmPassword").value;
+            var pw2 = document.getElementById("password").value;
+            console.log(document.getElementById("password").value === '');
+            console.log(pw2);
+            //判断密码是否为空
+            if (document.getElementById("password").value === '') {
+                document.getElementById("nopwdError").innerHTML = "请输入密码";
+                document.getElementById("button").disabled = true;
+            } else {
+                //判断两次密码是否相同
+                if (pw1 === pw2) {
+                    document.getElementById("pwdError").innerHTML = "";
+                    document.getElementById("button").disabled = false;
+                } else {
+                    document.getElementById("pwdError").innerHTML = "两次密码不相同";
+                    document.getElementById("button").disabled = true;
+                }
+            }
+        }
+
+        //判断用户名是否输入
+        function verifyUsername() {
+            console.log(document.getElementById("storeName").value === '');
+            console.log(document.getElementById("storeName").value);
+            if (document.getElementById("storeName").value === '') {
+                document.getElementById("storeNameError").innerHTML = "请输入店名";
+                document.getElementById("button").disabled = true;
+            } else {
+                document.getElementById("storeNameError").innerHTML = "";
+                document.getElementById("button").disabled = false;
+            }
+        }
+
+        // 判断账号是否输入
+        function verifyAccount() {
+            if (document.getElementById("account").value === '') {
+                document.getElementById("accountError").innerHTML = "请输入用户名";
+                document.getElementById("button").disabled = true;
+            } else {
+                document.getElementById("accountError").innerHTML = "";
+                document.getElementById("button").disabled = false;
+            }
+        }
+    </script>
+</head>
+
+<body>
+<div class="reg">
+    <h1 class="reg-title">商家注册</h1>
+    <form action="/order/register/business" class="layui-form" method="post">
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-username"></i>
+                    </div>
+                    <input class="layui-input" id="storeName" name="storeName" onblur="verifyUsername()" placeholder="请输入店名"
+                           type="text">
+                </div>
+            </div>
+            <p id="storeNameError" style="color: red"></p>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-user"></i>
+                    </div>
+                    <input class="layui-input" id="account" name="account" onblur="verifyAccount()" placeholder="请输入账号"
+                           type="text">
+                </div>
+            </div>
+            <p id="accountError" style="color: red"></p>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-password"></i>
+                    </div>
+                    <input class="layui-input" id="password" name="password" onblur="verification()" placeholder="请输入密码"
+                           type="password">
+                </div>
+            </div>
+            <p id="nopwdError" style="color: red"></p>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-password"></i>
+                    </div>
+                    <input class="layui-input" id="confirmPassword" name="confirmPassword" onblur="verification()"
+                           placeholder="确认密码" type="password">
+                </div>
+            </div>
+            <p id="pwdError" style="color: red"></p>
+        </div>
+        <span id="pwdError"></span>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-xs7">
+                    <div class="layui-input-wrap">
+                        <div class="layui-input-prefix">
+                            <i class="layui-icon layui-icon-password"></i>
+                        </div>
+                        <input class="layui-input" id="captcha" name="captcha" placeholder="验证码" type="text">
+                    </div>
+                </div>
+                <div class="layui-col-xs5">
+                    <div style="margin-left: 10px;">
+                        <img height="40px"
+                             onclick="this.src='/order/captcha.jpg?'+ new Date().getTime();" src="/order/captcha.jpg"
+                             width="120px">
+                    </div>
+                </div>
+            </div>
+            <p style="color: red" th:text="${Error}"></p>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline ">
+                <select id="quiz1" lay-filter="quiz1" name="quiz1">
+                    <option value="">请选择所在省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select id="quiz2" lay-filter="quiz2" name="quiz2">
+                    <option value="">请选择所在市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select id="address" name="address">
+                    <option value="">请选择所在区</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text" style="float: left;">
+            <div style="width:600px ;float: left;">
+                <textarea class="layui-textarea" name="fullAddress" placeholder="详细地址"></textarea>
+            </div>
+        </div>
+        <span>已有帐号？<a href="../login/business">登录</a></span>
+        <div class="layui-form-item" style="margin-top: 5px">
+            <button class="layui-btn layui-btn-fluid" id="button" lay-filter="demo-login" lay-submit
+                    type="submit">注册
+            </button>
+        </div>
+
+    </form>
+</div>
+<script>
+
+
+    layui.use(['form', 'laydate'], function () {
+        // layui引入需要的组件
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let form = layui.form;
+
+        // 二级联动 第一步 渲染父级
+        $.ajax({
+            url: '../address/province',
+            dataType: 'json',
+            type: 'get',
+            success: function (resData) {
+
+                $.each(resData.data, function (index, value) {
+                    // 这里的 value.roomName
+                    // 前者是页面显示的值，后者是传递给后台的值。
+                    // 正常情况下，后者应该是 value.id
+                    $('#quiz1').append(new Option(value.name, value.id));	// 下拉菜单里添加元素
+                });
+
+                //渲染select
+                form.render('select');
+            }
+        });
+
+
+        // 第二步 监听父级，每当父级发生变化时，渲染子级的值
+        form.on('select(quiz1)', function (data) {
+            let pid = data.value; //  选中的科室名称
+            console.log(pid)
+            $.ajax({
+                url: '../address/city',
+                dataType: 'json',
+                type: 'get',
+                data: {pid: pid},
+                success: function (resData) {
+
+                    $('#quiz2').empty();
+                    $('#quiz2').append(new Option("请选择所在市"));
+                    $('#address').empty();
+                    $('#address').append(new Option("请选择所在区"));
+                    $.each(resData.data, function (index, value) {
+                        // 这里的 value.bedNo
+                        // 前者是页面显示的值，后者是传递给后台的值。
+                        // 正常情况下，后者应该是 value.id
+
+                        $('#quiz2').append(new Option(value.name, value.id));// 下拉菜单里添加元素
+                    });
+
+                    //渲染select
+                    form.render('select');
+                }
+            });
+        });
+        // 区
+        form.on('select(quiz2)', function (data) {
+            let pid = data.value; //  选中的科室名称
+            console.log(pid)
+            $.ajax({
+                url: '../address/district',
+                dataType: 'json',
+                type: 'get',
+                data: {pid: pid},		// 传入科室名称，查找该科室的所有床号
+                success: function (resData) {
+
+                    // 清空床号
+                    $('#address').empty();
+                    $('#address').append(new Option("请选择所在区"));
+                    $.each(resData.data, function (index, value) {
+                        // 这里的 value.bedNo
+                        // 前者是页面显示的值，后者是传递给后台的值。
+                        // 正常情况下，后者应该是 value.id
+                        $('#address').append(new Option(value.name, value.id));// 下拉菜单里添加元素
+                    });
+
+                    //渲染select
+                    form.render('select');
+                }
+            });
+        });
+
+    });
+
+
+</script>
+</body>
+
+</html>

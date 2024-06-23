@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+    <script src="../pages/vue/vue.min.js"></script>
+</head>
+<body>
+<div class="layui-form layui-row layui-col-space16">
+    <div class="layui-col-md6">
+        <form action="#" class="layui-form" enctype="multipart/form-data">
+            <select lay-filter="all" lay-verify="required" name="servicelist">
+                <option value="0">请选择</option>
+                <option value="1">已下单</option>
+                <option value="2">已出餐</option>
+                <option value="3">已取餐</option>
+                <option value="4">已送达</option>
+            </select>
+        </form>
+    </div>
+    <table class="layui-table" id="root" style="text-align: center">
+        <colgroup>
+            <col width="150">
+            <col width="150">
+            <col>
+        </colgroup>
+        <thead style="text-align: center">
+        <tr>
+            <th>订单编号</th>
+            <th>用户ID</th>
+            <th>价格</th>
+            <th>下单时间</th>
+            <th>订单状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in list">
+            <td>{{item.id}}</td>
+            <td>{{item.userId}}</td>
+            <td>￥{{item.price}}</td>
+            <td>{{item.orderTime}}</td>
+            <td class="layui-font-green" v-if="item.state===1">已下单</td>
+            <td class="layui-font-blue" v-if="item.state===2">已出餐</td>
+            <td style="color: orange" v-if="item.state===3">已取货</td>
+            <td style="color: green" v-if="item.state===4">已送达</td>
+            <td>
+                <button @click="selectMenu(item.id)" class="layui-btn layui-btn-radius">查看</button>
+                <button @click="upStateBusinesses(item.id)" class="layui-btn layui-btn-warm layui-btn-radius"
+                        v-if="item.state===1">出餐
+                </button>
+                <button class="layui-btn layui-btn-disabled layui-btn-radius" v-if="item.state!==1">出餐</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="demo-laypage-pn-show"></div>
+</div>
+<script>
+    let vue = new Vue({
+        el: "#root",
+        data: {
+            list: null,
+        },
+        methods: {
+            upStateBusinesses(id) {
+                layer.confirm('确认出餐？', {icon: 3}, function () {
+                    $.ajax({
+                        url: "../business/upStateBusinesses",
+                        data: {id: id},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("出餐成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('出餐失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg('出餐失败');
+                        }
+                    })
+                });
+            },
+            selectMenu(id) {
+                layer.open({
+                    type: 2,
+                    title: '订单详情',
+                    shadeClose: true,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['400px', '500px'],
+                    content: '../business/selectMenu?id=' + id
+                });
+            }
+        }
+    })
+    let $ = layui.$;
+    let layer = layui.layer;
+    // 获取总记录数
+    $.ajax({
+        url: "../business/findOrderCount",
+        success: function (count) {
+            layui.use(function () {
+                var laypage = layui.laypage;
+                var layer = layui.layer;
+                // 只显示上一页、下一页、当前页
+                laypage.render({
+                    elem: 'demo-laypage-pn-show',
+                    count: count,
+                    groups: 1,
+                    limit: 6,
+                    first: false,
+                    last: false,
+                    layout: ['prev', 'page', 'next'],
+                    jump: function (obj, first) {
+                        $.ajax({
+                            url: "../business/findOrders",
+                            data: {page: obj.curr},
+                            success: function (list) {
+                                // console.log(JSON.parse( list ))
+                                // 将查到的数据放进vue容器
+                                // JSON.parse( list ) 将json转成对象
+                                vue.list = JSON.parse(list);
+                            }
+                        })
+                        // 首次不执行
+                        if (!first) {
+                            layer.msg('第 ' + obj.curr + ' 页');
+                        }
+                    }
+                });
+            });
+        }
+    })
+    layui.use(['form'], function () {
+        let form = layui.form;
+        form.on('select(all)', function (data) {
+            $.ajax({
+                url: "../business/selectOrdersCount",
+                data: {state: data.value},
+                success: function (count) {
+                    layui.use(function () {
+                        var laypage = layui.laypage;
+                        var layer = layui.layer;
+                        // 只显示上一页、下一页、当前页
+                        laypage.render({
+                            elem: 'demo-laypage-pn-show',
+                            count: count,
+                            groups: 1,
+                            limit: 6,
+                            first: false,
+                            last: false,
+                            layout: ['prev', 'page', 'next'],
+                            jump: function (obj, first) {
+                                $.ajax({
+                                    url: "../business/selectOrders",
+                                    data: {state: data.value},
+                                    success: function (list) {
+                                        // console.log(JSON.parse( list ))
+                                        // 将查到的数据放进vue容器
+                                        // JSON.parse( list ) 将json转成对象
+                                        vue.list = JSON.parse(list);
+                                    }
+                                })
+                                // 首次不执行
+                                if (!first) {
+                                    layer.msg('第 ' + obj.curr + ' 页');
+                                }
+                            }
+                        });
+                    });
+                }
+            })
+        });
+    })
+</script>
+</body>
+</html>

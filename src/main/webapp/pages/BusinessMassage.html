@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+    <script src="../pages/vue/vue.min.js"></script>
+    <style>
+        #massage {
+            font-size: 20px;
+            padding-left: 20px;
+        }
+
+        p {
+            margin: 10px;
+        }
+
+        img {
+            padding-left: 30px;
+        }
+
+        a {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+<div id="massage">
+    <p>店铺图片：</p>
+    <p>
+        <img alt="" height="150px" v-bind:src="business.pic" width="150px">
+    </p>
+    <a @click="upBusinessPic()" href="#" style="font-size: 15px;padding: 190px">更换图片</a>
+    <div id="pic" style="display: none">
+        <button class="layui-btn" id="ID-upload-demo-btn" type="button">
+            <i class="layui-icon layui-icon-upload"></i> 单图片上传
+        </button>
+        <div style="width: 132px;">
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="ID-upload-demo-img" style="width: 100%; height: 92px;">
+                <div id="ID-upload-demo-text"></div>
+            </div>
+            <div class="layui-progress layui-progress-big" lay-filter="filter-demo" lay-showPercent="yes">
+                <div class="layui-progress-bar" lay-percent=""></div>
+            </div>
+        </div>
+        <hr style="margin: 21px 0;">
+    </div>
+    <p>
+        id:{{business.id}}
+    </p>
+    <p>店名：{{business.storeName}}
+        <!--            <a @click="up('storeName')" href="#">修改</a>-->
+    </p>
+    <form action="../business/updateBusinessMassage" class="layui-form" id="storeName" style="display: none">
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-xs2">
+
+                    <div class="layui-input-wrap">
+                        <div class="layui-input-prefix">
+                            <i class="layui-icon layui-icon-username"></i>
+                        </div>
+                        <input class="layui-input" name="msg" onblur="verifyUsername()" placeholder="请输入店名"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-col-xs2">
+                    <div style="margin-left: 10px;">
+                        <button class="layui-btn layui-btn-normal layui-btn-radius" type="submit">保存</button>
+                    </div>
+                </div>
+            </div>
+            <p id="storeNameError" style="color: red"></p>
+        </div>
+        <input name="id" style="display: none" type="text" v-bind:value="business.id">
+        <input name="name" style="display: none" type="text" value="storeName">
+    </form>
+    <p>账号:{{business.account}}</p>
+    <p>地址:{{business.address}}
+    <form action="../business/updateBusinessMassage" class="layui-form" id="addressId" style="">
+        <input name="id" style="display: none" type="text" v-bind:value="business.id">
+        <input name="name" style="display: none" type="text" value="addressId">
+        <span style="margin: 10px">修改地址：</span>
+        <div class="layui-form-item">
+            <div class="layui-input-inline ">
+                <select id="quiz1" lay-filter="quiz1" name="quiz1">
+                    <option value="">请选择所在省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select id="quiz2" lay-filter="quiz2" name="quiz2">
+                    <option value="">请选择所在市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select id="address" name="msg">
+                    <option value="">请选择所在区</option>
+                </select>
+            </div>
+            <span><button class="layui-btn layui-btn-normal layui-btn-radius" type="submit">保存</button></span>
+        </div>
+    </form>
+    <p>详细地址:{{business.fullAddress}}
+        <a @click="upFAddress(business.id)" href="#">修改</a>
+    </p>
+    <p>状态：{{business.state}}
+        <button @click="upState('Y',business.id)" class="layui-bg-green layui-btn layui-btn-primary layui-btn-radius"
+                type="button" v-if="business.state==='下架' ">上架
+        </button>
+        <button @click="upState('N',business.id)" class="layui-bg-res layui-btn layui-btn-primary layui-btn-radius"
+                type="button" v-if="business.state==='上架' ">下架
+        </button>
+    </p>
+    <!--        <button type="button" class="layui-btn layui-btn-primary layui-btn-radius">修改密码</button>-->
+
+</div>
+
+<script>
+    let i = 0;
+    let upload = layui.upload;
+    let layer = layui.layer;
+    let element = layui.element;
+    let $ = layui.$;
+    let form = layui.form;
+    let vue = new Vue({
+        el: "#massage",
+        data: {
+            business: [],
+        },
+        methods: {
+            upBusinessPic() {
+                if (i % 2 === 0) {
+                    document.getElementById("pic").style.display = '';
+                } else {
+                    document.getElementById("pic").style.display = 'none';
+                }
+                i++;
+            },
+            up(name) {
+                document.getElementById(name).style.display = '';
+                i++;
+            },
+            upFAddress(id) {
+                layer.prompt({title: '详细地址', formType: 2,},
+                    function (value, index, elem) {
+                        $.ajax({
+                            url: "../business/upFullAddress",
+                            data: {id: id, fullAddress: value},
+                            success: function (msg) {
+                                msg = JSON.parse(msg).msg;
+                                if (msg === "success") {
+                                    layer.alert("修改成功", function () {
+                                        location.reload();
+                                    })
+                                } else {
+                                    layer.msg('修改失败');
+                                }
+                            },
+                            error: function () {
+                                layer.msg('修改失败');
+                            }
+                        })
+                    })
+            },
+            upState(s, id) {
+                $.ajax({
+                    url: '../business/upBState',
+                    data: {s: s, id: id},
+                    success: function (msg) {
+                        msg = JSON.parse(msg).msg;
+                        if (msg === "success") {
+                            layer.alert("修改成功", function () {
+                                location.reload();
+                            })
+                        } else {
+                            layer.msg('修改失败');
+                        }
+                    },
+                    error: function () {
+                        layer.msg('修改失败');
+                    }
+                })
+            }
+        }
+    })
+    $.ajax({
+        url: "../business/businessMassage",
+        success: function (data) {
+            data = JSON.parse(data)
+            vue.business = data;
+            console.log(vue.business)
+        }
+    });
+
+    layui.use(['form', 'laydate'], function () {
+        // layui引入需要的组件
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let form = layui.form;
+
+        // 二级联动 第一步 渲染父级
+        $.ajax({
+            url: '../address/province',
+            dataType: 'json',
+            type: 'get',
+            success: function (resData) {
+
+                $.each(resData.data, function (index, value) {
+                    // 这里的 value.roomName
+                    // 前者是页面显示的值，后者是传递给后台的值。
+                    // 正常情况下，后者应该是 value.id
+                    $('#quiz1').append(new Option(value.name, value.id));	// 下拉菜单里添加元素
+                });
+
+                //渲染select
+                form.render('select');
+            }
+        });
+
+
+        // 第二步 监听父级，每当父级发生变化时，渲染子级的值
+        form.on('select(quiz1)', function (data) {
+            let pid = data.value; //  选中的科室名称
+            console.log(pid)
+            $.ajax({
+                url: '../address/city',
+                dataType: 'json',
+                type: 'get',
+                data: {pid: pid},		// 传入科室名称，查找该科室的所有床号
+                success: function (resData) {
+
+                    // 清空床号
+                    $('#quiz2').empty();
+                    $('#quiz2').append(new Option("请选择所在市"));
+                    $('#address').empty();
+                    $('#address').append(new Option("请选择所在区"));
+                    $.each(resData.data, function (index, value) {
+                        // 这里的 value.bedNo
+                        // 前者是页面显示的值，后者是传递给后台的值。
+                        // 正常情况下，后者应该是 value.id
+
+                        $('#quiz2').append(new Option(value.name, value.id));// 下拉菜单里添加元素
+                    });
+
+                    //渲染select
+                    form.render('select');
+                }
+            });
+        });
+        // 区
+        form.on('select(quiz2)', function (data) {
+            let pid = data.value; //  选中的科室名称
+            console.log(pid)
+            $.ajax({
+                url: '../address/district',
+                dataType: 'json',
+                type: 'get',
+                data: {pid: pid},		// 传入科室名称，查找该科室的所有床号
+                success: function (resData) {
+
+                    // 清空床号
+                    $('#address').empty();
+                    $('#address').append(new Option("请选择所在区"));
+                    $.each(resData.data, function (index, value) {
+                        // 这里的 value.bedNo
+                        // 前者是页面显示的值，后者是传递给后台的值。
+                        // 正常情况下，后者应该是 value.id
+                        $('#address').append(new Option(value.name, value.id));// 下拉菜单里添加元素
+                    });
+
+                    //渲染select
+                    form.render('select');
+                }
+            });
+        });
+
+    });
+    layui.use(function () {
+        var upload = layui.upload;
+        var layer = layui.layer;
+        var element = layui.element;
+        var $ = layui.$;
+        // 单图片上传
+        var uploadInst = upload.render({
+            elem: '#ID-upload-demo-btn',
+            url: '../business/upBPic', // 实际使用时改成您自己的上传接口即可。
+            before: function (obj) {
+                // 预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#ID-upload-demo-img').attr('src', result); // 图片链接（base64）
+                });
+
+                element.progress('filter-demo', '0%'); // 进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            },
+            done: function (res) {
+                // 若上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                // 上传成功的一些操作
+                // …
+                $('#ID-upload-demo-text').html(''); // 置空上传失败的状态
+            },
+            error: function () {
+                // 演示失败状态，并实现重传
+                var demoText = $('#ID-upload-demo-text');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            },
+            // 进度条
+            progress: function (n, elem, e) {
+                element.progress('filter-demo', n + '%'); // 可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+
+</html>

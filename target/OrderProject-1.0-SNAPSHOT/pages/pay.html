@@ -1,0 +1,579 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <title>志刚外卖</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+
+    <!-- Set render engine for 360 browser -->
+    <meta content="webkit" name="renderer">
+
+    <!-- No Baidu Siteapp-->
+    <meta content="no-siteapp" http-equiv="Cache-Control"/>
+
+    <!-- <link rel="icon" type="image/png" href="assets/i/favicon.png"> -->
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta content="yes" name="mobile-web-app-capable">
+    <!-- <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png"> -->
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="Amaze UI" name="apple-mobile-web-app-title"/>
+    <!--  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png"> -->
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <!-- <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png"> -->
+    <meta content="#0e90d2" name="msapplication-TileColor">
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <style>
+        /*comment*/
+        /* http://meyerweb.com/eric/tools/css/reset/
+           v2.0 | 20110126
+           License: none (public domain)
+        */
+
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed,
+        figure, figcaption, footer, header, hgroup,
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+            background: white;
+        }
+
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure,
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+
+        body {
+            line-height: 1;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+
+        blockquote, q {
+            quotes: none;
+        }
+
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        *, :after, :before {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .am-cf:after, .am-cf:before {
+            content: " ";
+            display: table
+        }
+
+        .am-cf:after {
+            clear: both
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:link, a:visited {
+            text-decoration: none; /*超链接无下划线*/
+        }
+
+        /*业务代码*/
+        html, body {
+            background-color: #eeeeee;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            width: 100%;
+            height: 0.8rem;
+            line-height: 0.8rem;
+            text-align: center;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        header .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0.80rem;
+            background-color: #000;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        header .left {
+            position: absolute;
+            left: 0.28rem;
+            top: 0.23rem;
+            z-index: 1;
+            width: 0.39rem;
+            height: 0.32rem;
+            background: url('../pages/img/main.png') no-repeat center;
+            background-size: 100% 100%;
+        }
+
+        header .shezhi {
+            position: absolute;
+            right: 0.25rem;
+            top: 0.21rem;
+            z-index: 1;
+            width: 0.36rem;
+            height: 0.4rem;
+            background: url('../pages/img/search.png') no-repeat center;
+            background-size: 100% 100%;
+        }
+
+        .container {
+            padding-bottom: 1.04rem;
+        }
+
+        .banner {
+            margin-bottom: 0.17rem;
+        }
+
+        .banner img {
+            display: block;
+            width: 100%;
+        }
+
+        .gongneng {
+            padding-bottom: 0.26rem;
+            background-color: #fff;
+            margin-bottom: 0.17rem;
+        }
+
+        .gongneng-list {
+            display: flex;
+            display: -webkit-flex;
+            padding-top: 0.36rem;
+        }
+
+        .gongneng-list .item {
+            flex: 1;
+            -webkit-flex: 1;
+        }
+
+        .gongneng-list .item .img {
+            width: 0.73rem;
+            height: 0.73rem;
+            margin: 0 auto;
+        }
+
+        .gongneng-list .item p {
+            padding-top: 0.09rem;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .gongneng-list .item .img.g1 {
+            background: url('../pages/img/g1.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g2 {
+            background: url('../pages/img/g2.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g3 {
+            background: url('../pages/img/g3.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g4 {
+            background: url('../pages/img/g4.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g5 {
+            background: url('../pages/img/g5.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g6 {
+            background: url('../pages/img/g6.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g7 {
+            background: url('../pages/img/g7.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g8 {
+            background: url('../pages/img/g8.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .gongneng-list .item .img.g9 {
+            background: url('../pages/img/g9.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .jxms {
+            height: 0.7rem;
+            padding-left: 0.3rem;
+            margin-bottom: 0.17rem;
+            background-color: #fff;
+        }
+
+        .jxms .jxms-icon, .jxms span {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 16px;
+            color: #e50150;
+        }
+
+        .jxms .jxms-icon {
+            display: inline-block;
+            width: 0.39rem;
+            height: 0.38rem;
+            background: url('../pages/img/jxms.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .jxms span {
+            line-height: 0.7rem;
+        }
+
+        .goods-one {
+            margin-bottom: 0.06rem;
+        }
+
+        .goods-one .left {
+            position: relative;
+            float: left;
+            width: 3.3rem;
+            height: 2.9rem;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .goods-one .left .tit {
+            padding-top: 0.18rem;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .goods-one .left .tip {
+            font-size: 14px;
+            color: #43af0b;
+            line-height: 20px;
+        }
+
+        .goods-one .left img {
+            display: block;
+            width: 2.21rem;
+            height: 1.79rem;
+            margin: 0.04rem auto 0;
+        }
+
+        .goods-one .left .jisu {
+            position: absolute;
+            top: 0.89rem;
+            right: 0.15rem;
+            display: inline-block;
+            width: 0.74rem;
+            height: 0.74rem;
+            background: url('../pages/img/jisu.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .goods-one .right {
+            margin-left: 3.3rem;
+            padding-left: 0.05rem;
+        }
+
+        .goods-one .right .list {
+            height: 1.42rem;
+            margin-bottom: 0.06rem;
+            padding-left: 0.53rem;
+            background-color: #fff;
+        }
+
+        .goods-one .right .list .tit {
+            padding-top: 0.4rem;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .goods-one .right .list .tip {
+            padding-top: 0.09rem;
+            font-size: 14px;
+            color: #43af0b;
+        }
+
+        .goods-one .right .list.cai1 {
+            background: #fff url('../pages/img/caipin.jpg') no-repeat;
+            background-size: 1.67rem 1.18rem;
+            background-position: 91% 50%;
+        }
+
+        .goods-one .right .list.cai2 {
+            background: #fff url('../pages/img/caipin.jpg') no-repeat;
+            background-size: 1.67rem 1.18rem;
+            background-position: 91% 50%;
+        }
+
+        .goods-two {
+            display: flex;
+            display: -webkit-flex;
+            margin-bottom: 0.2rem;
+        }
+
+        .goods-two .item {
+            flex: 1;
+            -webkit-flex: 1;
+            background-color: #fff;
+            margin-right: 0.05rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .goods-two .item:last-child {
+            margin-right: 0;
+        }
+
+        .goods-two .item .tit {
+            padding-top: 0.24rem;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .goods-two .item .tip {
+            font-size: 14px;
+            color: #43af0b;
+            line-height: 24px;
+        }
+
+        .goods-two .item img {
+            display: block;
+            width: 1.67rem;
+            height: 1.18rem;
+            margin: 0.26rem auto 0.12rem;
+        }
+
+        .image-item {
+            padding: 0 0.1rem;
+        }
+
+        .image-item .item {
+            width: 25%;
+            float: left;
+            margin-bottom: 0.06rem;
+            padding-right: 0.05rem;
+        }
+
+        .image-item .item:last-child {
+            padding-right: 0;
+        }
+
+        .image-item .item img {
+            display: block;
+            width: 100%;
+        }
+
+        .image-item .item:hover img {
+            box-shadow: 0 0 11px #464444;
+            -moz-box-shadow: 0 0 11px #464444; /* 老的 Firefox */
+            transform: scale(1.2);
+            -ms-transform: scale(1.2); /* IE 9 */
+            -moz-transform: scale(1.2); /* Firefox */
+            -webkit-transform: scale(1.2); /* Safari 和 Chrome */
+            -o-transform: scale(1.2); /* Opera */
+        }
+
+        /*底部*/
+        #footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1.04rem;
+            background-color: #fff;
+            border-top: 1px solid #cacaca;
+        }
+
+        #footer-gg {
+            display: flex;
+            display: -webkit-flex;
+        }
+
+        #footer-gg .item {
+            flex: 1;
+            -webkit-flex: 1;
+            color: #9d9d9d;
+            font-size: 12px;
+        }
+
+        #footer-gg .item a {
+            display: block;
+            color: inherit;
+        }
+
+        #footer-gg .item .icon {
+            display: block;
+            width: 0.49rem;
+            height: 0.5rem;
+            margin: 0.07rem auto 0;
+        }
+
+        #footer-gg .item .icon.g1 {
+            background: url('../pages/img/home.jpg') no-repeat center top;
+            background-size: 0.49rem 0.5rem;
+        }
+
+        #footer-gg .item .icon.g2 {
+            background: url('../pages/img/all.jpg') no-repeat center top;
+            background-size: 0.35rem 0.46rem;
+        }
+
+        #footer-gg .item .icon.g3 {
+            background: url('../pages/img/yuyue.jpg') no-repeat center top;
+            background-size: 0.43rem 0.43rem;
+        }
+
+        #footer-gg .item .icon.g4 {
+            background: url('../pages/img/user.jpg') no-repeat center top;
+            background-size: 0.34rem 0.41rem;
+        }
+
+        #footer-gg .item p {
+            padding-top: 0.05rem;
+            text-align: center;
+            line-height: 16px;
+        }
+    </style>
+    <style>
+        .texP {
+            width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body style="background: white;">
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a
+        href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+    以获得更好的体验！</p>
+<![endif]-->
+
+<div class="container" style="height: 650px">
+
+    <div class="gongneng" id="root">
+        <p style="text-align: center;padding-top: 100px">￥{{price}}</p>
+        <p style="text-align: center;margin-top: 10px">
+            <button @click="pay()" class="layui-btn layui-btn-warm layui-btn-radius" style="margin: auto" type="button">
+                立即支付
+            </button>
+        </p>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer id="footer">
+    <ul id="footer-gg">
+        <li class="item"><a href="#"><span class="icon g1"></span>
+            <p>外卖</p></a></li>
+        <li class="item"><a href="../user/userMs"><span class="icon g2"></span>
+            <p>我的</p></a></li>
+    </ul>
+</footer>
+
+<script src="../pages/fontsize.js"></script>
+<script src="../pages/layui/layui.js"></script>
+<script src="../pages/vue/vue.min.js"></script>
+<script>
+    var header = document.querySelector('header .bg'), body = document.querySelector('body'),
+        banner = document.querySelector('.banner');
+    // console.log(banner.offsetHeight);
+
+
+    body.onscroll = function () {
+
+        var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+
+        // document.querySelector('.aaa').innerHTML += scroll/banner.offsetHeight+'</br>';
+
+        if (scroll / banner.offsetHeight >= 0.8) {
+            header.style.opacity = 0.8;
+            return
+        }
+
+        header.style.opacity = scroll / banner.offsetHeight;
+    }
+
+</script>
+<script>
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    let form = layui.form;
+    let vue = new Vue({
+        el: "#root",
+        data: {
+            price: 0,
+        },
+        methods: {
+            pay() {
+                location.assign("../user/pay");
+            }
+        }
+    });
+    $.ajax({
+        url: "../user/getPrice",
+        success: function (list) {
+            vue.price = JSON.parse(list);
+        }
+    })
+</script>
+</body>
+</html>

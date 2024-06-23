@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.example.order.Dao.AddressMapper">
+
+    <select id="findProvince" resultType="Address">
+        select id,name
+        from
+        t_district
+        where pid=0
+    </select>
+    <select id="findCity" resultType="Address">
+        select id,name
+        from
+        t_district
+        where pid=#{pid}
+    </select>
+    <select id="findDistrict" resultType="Address">
+        select id,name
+        from
+        t_district
+        where pid=#{pid}
+    </select>
+    <select id="findName" resultType="string">
+        select name
+        from
+        t_district
+        where id=#{id}
+    </select>
+</mapper>

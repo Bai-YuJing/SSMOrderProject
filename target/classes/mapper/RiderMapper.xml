@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.example.order.Dao.RiderMapper">
+
+    <insert id="register" parameterType="Rider">
+        insert into t_rider
+        (account,password,phone,name)
+        values
+        (#{account},PASSWORD(#{password}),#{phone},#{name})
+    </insert>
+    <select id="login" resultType="Rider">
+        select id,account,password, phone ,name,state
+        from
+        t_rider
+        where account=#{account} and password=PASSWORD(#{password})
+    </select>
+    <select id="getOrders" resultType="Orders">
+        select id,order_time orderTime,user_address userAddress,business_address businessAddress,state
+        from t_orders
+        where
+        rider_id is null
+        order by state desc
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="getOrdersCount" resultType="int">
+        select count(*)
+        from t_orders
+        where
+        rider_id is null
+    </select>
+    <update id="riderOrder">
+        update t_orders
+        set rider_id=#{riderId}
+        where id=#{id}
+    </update>
+    <select id="selectOrders" resultType="int">
+        select state
+        from t_orders
+        where id=#{id}
+    </select>
+    <select id="getMyOrders" resultType="Orders">
+        select id,order_time orderTime,user_address userAddress,business_address businessAddress,state
+        from t_orders
+        where
+        rider_id=#{riderId}
+        order by state asc
+        limit ${(page-1)*rows},${rows}
+    </select>
+    <select id="getMyOrdersCount" resultType="int">
+        select count(*)
+        from t_orders
+        where
+        rider_id=#{riderId}
+    </select>
+    <update id="riderMyOrder">
+        update t_orders
+        set state=#{state}
+        where id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../pages/layui/css/layui.css" rel="stylesheet">
+    <script src="../pages/layui/layui.js"></script>
+</head>
+
+<body>
+
+
+<table id="table">
+    <script id="actions" type="text/html">
+        <div class="layui-btn-container">
+            <button lay-active="state" class="layui-btn layui-btn-xs layui-btn-radius" id="state" data-id={{=d.id}}>
+                <i class="layui-icon layui-icon-disabled"></i> 修改
+
+            </button>
+            <button lay-active="delete" class="layui-btn layui-btn-xs layui-btn-radius layui-bg-red" id="delete"
+                    data-id={{=d.id}}>
+                <i class="layui-icon layui-icon-delete" id="{{=d.id}}"></i> 删除
+            </button>
+        </div>
+    </script>
+    </div>
+</table>
+
+</body>
+<script>
+    layui.use(function () {
+        let table = layui.table;
+        table.render({
+            elem: '#table',
+            url: '../admin/findRider',
+            cols: [[
+                {field: 'id', title: 'ID', width: 150, align: 'center', fixed: true},
+                {field: 'name', title: '姓名', width: 150, align: 'center', fixed: true},
+                {field: 'account', title: '账号', width: 150, align: 'center'},
+                {field: 'phone', title: '手机', Width: 250, align: 'center'},
+                {field: 'state', title: '状态', Width: 120, align: 'center'},
+                {title: '操作', minwidth: 150, align: 'center', templet: '#actions'}
+            ]],
+            toolbar: '#toolbar',
+            page: true
+        });
+    });
+
+</script>
+<script>
+    // layui引入需要的组件
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    let form = layui.form;
+
+    layui.use('util', function () {
+        var util = layui.util;
+        // 示例
+        util.event('lay-active', {
+            delete: function (d) {
+                id = d.context.dataset.id;
+                layer.confirm("确认删除？", {icon: 3, title: '提示'}, function () {
+                    $.ajax({
+                        url: "../admin/delete",
+                        data: {id: id, table: "t_rider"},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("删除成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("删除失败")
+                        }
+                    });
+                })
+            },
+            state: function (d) {
+                id = d.context.dataset.id;
+                layer.confirm("确认修改？", {icon: 3, title: '提示'}, function () {
+                    $.ajax({
+                        url: "../admin/state",
+                        data: {id: id, table: "t_rider"},
+                        success: function (msg) {
+                            msg = JSON.parse(msg).msg;
+                            if (msg === "success") {
+                                layer.alert("删除成功", function () {
+                                    location.reload();
+                                })
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("修改失败")
+                        }
+                    });
+                })
+            }
+
+        });
+
+    });
+
+</script>
+</html>

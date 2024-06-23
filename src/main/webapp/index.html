@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="pages/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<ul class="layui-nav layui-bg-cyan">
+    <li class="layui-nav-item"><a href="">首页</a></li>
+    <li class="layui-nav-item"><a href="../order/login/user">用户登录</a></li>
+    <li class="layui-nav-item"><a href="../order/login/business">商家登录</a></li>
+    <li class="layui-nav-item"><a href="../order/login/rider">骑手登录</a></li>
+    <li class="layui-nav-item"><a href="../order/login/admin">管理员登录</a></li>
+
+</ul>
+<div class="layui-carousel" id="ID-carousel-demo-image" style="margin: 10px auto auto;">
+    <div carousel-item>
+        <div><img alt="banner" src="pages/img/bananer/11.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/12.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/13.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/14.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/15.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/16.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/17.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/18.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/19.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/20.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/21.png"></div>
+        <div><img alt="banner" src="pages/img/bananer/22.png"></div>
+    </div>
+</div>
+
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+<script src="pages/layui/layui.js"></script>
+<script>
+    layui.use(function () {
+        var carousel = layui.carousel;
+        // 渲染 - 图片轮播
+        carousel.render({
+            elem: '#ID-carousel-demo-image',
+            width: '1600px',
+            height: '700px',
+            interval: 5000
+        });
+    });
+</script>
+
+</body>
+</html>

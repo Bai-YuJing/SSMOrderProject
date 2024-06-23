@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.example.order.Dao.UserMapper">
+
+    <insert id="register" parameterType="User">
+        insert into t_user
+        (username,account,password,birthday)
+        values
+        (#{username},#{account},PASSWORD(#{password}),#{birthday})
+    </insert>
+
+    <select id="login" resultType="User">
+        select id,username,account,password,birthday
+        from
+        t_user
+        where account=#{account} and password=PASSWORD(#{password})
+    </select>
+    <select id="findBusiness" resultType="UserBusiness">
+        select id,store_name storeName,full_address fullAddress,pic
+        from
+        t_business
+        where state='Y'
+    </select>
+    <select id="findBusinessCls" resultType="UserClassify">
+        select id,name
+        from
+        t_classify
+        where business_id=#{id}
+    </select>
+    <select id="findMenu" resultType="UserMenu">
+        select id,name,pic,price,business_id businessId
+        from
+        t_menu
+        where classify_id=#{id} and state="Y"
+    </select>
+    <select id="findStoreName" resultType="string">
+        select store_name storeName
+        from
+        t_business
+        where id=#{id}
+    </select>
+    <insert id="addAddress" parameterType="userAddress">
+        insert into t_user_address
+        (user_id,address,full_address,name,phone)
+        values
+        (#{userId},#{address},#{full_address},#{name},#{phonenumber})
+    </insert>
+    <select id="findUserAddress" resultType="UserAddress">
+        select id,address,full_address,name,phone phonenumber,state
+        from t_user_address
+        where user_id=#{id}
+    </select>
+    <update id="setAddress">
+        update t_user_address
+        SET state="Y"
+        WHERE id=#{id}
+    </update>
+    <update id="setAddressNo">
+        update t_user_address
+        SET state="N"
+        WHERE user_id=#{id}
+    </update>
+    <select id="getOrderAddress" resultType="UserAddress">
+        select address,full_address
+        from
+        t_user_address
+        where user_id=#{id} and state='Y'
+    </select>
+    <insert id="pay" parameterType="Orders">
+        insert into t_orders
+        (id,price,user_id,business_id,user_address,business_address)
+        values
+        (#{id},#{price},#{userId},#{businessId},#{userAddress},#{businessAddress})
+    </insert>
+    <insert id="payFull" parameterType="Orders">
+        insert into t_full_orders
+        (order_id,menu_id,num)
+        values
+        (#{orderId},#{menuId},#{num})
+    </insert>
+    <select id="findBusinessFullAddress" resultType="string">
+        select full_address
+        from
+        t_business
+        where
+        id=#{id}
+    </select>
+    <select id="findBusinessAddressID" resultType="int">
+        select address
+        from
+        t_business
+        where
+        id=#{id}
+    </select>
+    <select id="findOrder" resultType="Orders">
+        select id,price,order_time orderTime,business_id businessId,state
+        from
+        t_orders
+        where
+        user_id=#{id}
+    </select>
+    <select id="findPic" resultType="string">
+        select pic
+        from
+        t_business
+        where
+        id=#{id}
+    </select>
+
+</mapper>
