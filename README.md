@@ -32,41 +32,11 @@ Vue是一个独立的社区驱动的项目，它是由尤雨溪在2014年作为�
 
 MVC模式中，M是指模型，V是视图，C则是控制器。模型（Model）：模型是应用程序的核心部分，负责管理数据和业务逻辑。它直接与数据库交互，检索数据并处理前端的命令。视图（View）：视图是用户界面的部分，负责将数据以图形界面的形式展示给用户。它仅仅展示数据，不包含业务逻辑处理。控制器（Controller）：控制器作为模型和视图之间的中介，处理用户的输入，将命令传递给模型，并选择视图来显示模型的数据。
 
-## 2 界面设计
-
-### 2.1 首页界面
-
-![首页](I:\ZXW\SSM\code\实训\报告\截图\首页.png)
-
-### 2.2用户界面
-
-![点单界面](I:\ZXW\SSM\code\实训\报告\截图\点单界面.png)
-
-### 2.3商家界面
-
-![商家主页](I:\ZXW\SSM\code\实训\报告\截图\商家主页.png)
-
-### 2.4 管理员界面
-
-![骑手管理](I:\ZXW\SSM\code\实训\报告\截图\骑手管理.png)
-
-### 2.5 订单查询（骑手）
-
-![image-20240623182141753](C:\Users\ZXW\AppData\Roaming\Typora\typora-user-images\image-20240623182141753.png)
-
-### 2.6 订单查询（商家）
-
-![image-20240623182209912](C:\Users\ZXW\AppData\Roaming\Typora\typora-user-images\image-20240623182209912.png)
-
-## 3 概要设计
+## 2 概要设计
 
 系统主要涉及到游客、用户、骑手、商家和管理员3种用户。
 
-### 3.1 E-R图
-
-![image-20240623181921000](C:\Users\ZXW\AppData\Roaming\Typora\typora-user-images\image-20240623181921000.png)
-
-### 3.2 数据字典
+### 2.1 数据字典
 
 表**3.1** 管理员信息表
 
@@ -195,17 +165,15 @@ MVC模式中，M是指模型，V是视图，C则是控制器。模型（Model）
 | father_id  | int(11)      |            | YES          |              | 父级ID     |
 | level      | Tinyint(1)   |            | YES          |              | 级次ID     |
 
-## 5 文档结构图 
+## 3 文档结构图
 
 系统开发框架主要以SSM为主，SSM框架是标准的MVC，将整个系统划分为表示层、控制层、服务层、数据库访问层4层，使用Spring实现业务对象管理， SpringMVC负责请求的转发和视图管理，Mybatis作为数据对象持久化引擎。
-
-![电脑萤幕画面  描述已自动生成](file:///C:/Users/ZXW/AppData/Local/Temp/msohtmlclip1/01/clip_image002.gif)
 
 文档结构图中其中的POJO包为表示层，里面定义了一个个类，每个类有对应数据库的必要属性，在该包中也定义了GET和SET方法。DAO包为数据库访问层，其包里面主要分为两类，一类是xxMapper.java类，定义了对数据库进行操作的方法名；另一类是xxMapper.xml类，在该xml中，主要完成对Mapper.java的映射以及对数据库操作的具体sql语句。Service层为服务层，在该层中，主要是返回调用DAO层方法后的一个结果。
 
 Controller层为控制层，在该层中用于获取在前台界面传来的数据，并通过该数据在数据库里面进行查询，最后将查询到的结果通过Ajax返回给前台页面，在前台页面进行展示。
 
-## 6 部分代码
+## 4 部分代码
 
 ```java
 package cn.example.order.controller;
@@ -552,7 +520,7 @@ public class BusinessController {
 
 
 
-## 7 联系方式
+## 5 联系方式
 
 1522993472@qq.com
 
